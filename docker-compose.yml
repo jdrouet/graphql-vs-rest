@@ -1,0 +1,22 @@
+services:
+  runner-graphql-api:
+    image: grafana/k6
+    command: run /scenario.js
+    volumes:
+      - ./graphql-api/scenario.js:/scenario.js:ro
+    depends_on:
+      - server-graphql-api
+
+  server-graphql-api:
+    build: ./graphql-api
+
+  runner-rest-api:
+    image: grafana/k6
+    command: run /scenario.js
+    volumes:
+      - ./rest-api/scenario.js:/scenario.js:ro
+    depends_on:
+      - server-rest-api
+
+  server-rest-api:
+    build: ./rest-api
