@@ -2,6 +2,8 @@
 
 This is just a repo to compare a simple GraphQL API and a Rest API.
 
+You can find the results of 5 runs for each implementation [here](./results/readme.md)
+
 ## Running
 
 ```bash
