@@ -8,7 +8,12 @@ services:
       - server-graphql-api
 
   server-graphql-api:
-    build: ./graphql-api
+    build:
+      target: graphql-api
+    depends_on:
+      - database
+    ports:
+      - 3001:3000
 
   runner-rest-api:
     image: grafana/k6
@@ -19,4 +24,12 @@ services:
       - server-rest-api
 
   server-rest-api:
-    build: ./rest-api
+    build:
+      target: rest-api
+    depends_on:
+      - database
+    ports:
+      - 3002:3000
+
+  database:
+    build: ./database

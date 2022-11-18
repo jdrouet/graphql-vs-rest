@@ -2,6 +2,7 @@ pub mod schema;
 
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::{extract::Extension, routing::post, Router, Server};
+use common::service::database;
 
 async fn graphql_handler(
     schema: Extension<schema::GraphQLSchema>,
@@ -12,7 +13,8 @@ async fn graphql_handler(
 
 #[tokio::main]
 async fn main() {
-    let schema = schema::build_schema().finish();
+    let database_pool = database::create_pool().await;
+    let schema = schema::build_schema().data(database_pool).finish();
 
     let app = Router::new()
         .route("/", post(graphql_handler))

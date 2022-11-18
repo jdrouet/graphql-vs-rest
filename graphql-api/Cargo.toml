@@ -8,6 +8,9 @@ edition = "2021"
 [dependencies]
 async-graphql = { version = "4.0" }
 async-graphql-axum = { version = "4.0" }
-tokio = { version = "1", features = ["full"] }
-hyper = "0.14"
 axum = { version = "0.5.1", features = ["headers"] }
+hyper = "0.14"
+tokio = { version = "1", features = ["full"] }
+validator = { version = "0.16", features = ["derive"] }
+
+common = { path = "../common", features = ["graphql"] }

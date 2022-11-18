@@ -1,16 +1,22 @@
-use axum::{response::Json, routing::get, Router};
-use serde_json::{json, Value};
+use axum::{
+    extract::Extension,
+    routing::{get, post},
+    Router,
+};
+use common::service::database;
 
-async fn status() -> Json<Value> {
-    Json(json!({ "running": true }))
-}
+mod error;
+mod handler;
 
 #[tokio::main]
 async fn main() {
-    // build our application with a single route
-    let app = Router::new().route("/status", get(status));
+    let database_pool = database::create_pool().await;
 
-    // run it with hyper on localhost:3000
+    let app = Router::new()
+        .route("/status", get(handler::status::handler))
+        .route("/accounts", post(handler::create_account::handler))
+        .layer(Extension(database_pool));
+
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
         .serve(app.into_make_service())
         .await

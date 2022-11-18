@@ -1,0 +1,26 @@
+[package]
+name = "common"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+graphql = ["dep:async-graphql"]
+rest = []
+
+[dependencies]
+async-graphql = { version = "4.0", optional = true, features = [
+    "chrono",
+    "uuid",
+] }
+chrono = { version = "*", features = ["serde"] }
+serde = { version = "*", features = ["derive"] }
+sqlx = { version = "*", features = [
+    "runtime-tokio-rustls",
+    "postgres",
+    "chrono",
+    "uuid",
+] }
+uuid = { version = "*", features = ["serde"] }
+validator = { version = "0.16", features = ["derive"] }
