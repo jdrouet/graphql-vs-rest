@@ -7,6 +7,7 @@ use uuid::Uuid;
     feature = "graphql",
     derive(async_graphql::InputObject, async_graphql::SimpleObject)
 )]
+#[cfg_attr(feature = "rest", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct Account {
     pub id: Uuid,
@@ -39,6 +40,7 @@ impl Account {
 
 #[derive(Clone, Debug, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "graphql", derive(async_graphql::InputObject))]
+#[cfg_attr(feature = "rest", derive(schemars::JsonSchema))]
 pub struct CreateAccount {
     #[validate(length(min = 2))]
     pub name: String,

@@ -3,6 +3,7 @@ use sqlx::Row;
 use uuid::Uuid;
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
+#[cfg_attr(feature = "rest", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct Message {
     pub id: Uuid,
@@ -53,6 +54,7 @@ impl Message {
 }
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
+#[cfg_attr(feature = "rest", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct MessageWithCreator {
     pub id: Uuid,
@@ -79,6 +81,7 @@ impl<'r> sqlx::FromRow<'r, sqlx::postgres::PgRow> for MessageWithCreator {
 
 #[derive(Clone, Debug, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "graphql", derive(async_graphql::InputObject))]
+#[cfg_attr(feature = "rest", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct CreateMessage {
     pub creator_id: Uuid,
@@ -107,6 +110,7 @@ RETURNING id, content, created_by, created_at
 
 #[derive(Clone, Debug, serde::Deserialize)]
 #[cfg_attr(feature = "graphql", derive(async_graphql::InputObject))]
+#[cfg_attr(feature = "rest", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct ListMessages {
     count: Option<u64>,

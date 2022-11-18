@@ -17,6 +17,7 @@ async fn main() {
         .route("/accounts", post(handler::create_account::handler))
         .route("/messages", get(handler::list_message::handler))
         .route("/messages", post(handler::create_message::handler))
+        .route("/schema", get(handler::schema::handler))
         .layer(Extension(database_pool));
 
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())

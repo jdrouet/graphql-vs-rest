@@ -7,7 +7,7 @@ edition = "2021"
 
 [features]
 graphql = ["dep:async-graphql"]
-rest = []
+rest = ["dep:schemars"]
 
 [dependencies]
 async-graphql = { version = "4.0", optional = true, features = [
@@ -24,3 +24,8 @@ sqlx = { version = "*", features = [
 ] }
 uuid = { version = "*", features = ["serde"] }
 validator = { version = "0.16", features = ["derive"] }
+schemars = { version = "0.8", features = [
+    "chrono",
+    "uuid1",
+    "derive",
+], optional = true }
