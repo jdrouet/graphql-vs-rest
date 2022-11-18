@@ -15,6 +15,7 @@ async fn main() {
     let app = Router::new()
         .route("/status", get(handler::status::handler))
         .route("/accounts", post(handler::create_account::handler))
+        .route("/messages", post(handler::create_message::handler))
         .layer(Extension(database_pool));
 
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())

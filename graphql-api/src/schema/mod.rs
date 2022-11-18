@@ -1,5 +1,6 @@
 pub mod account;
 pub mod health;
+pub mod message;
 
 use async_graphql::{EmptySubscription, MergedObject, Schema, SchemaBuilder};
 

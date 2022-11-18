@@ -24,9 +24,12 @@ pub struct MessageWithCreator {
     pub created_at: DateTime<Utc>,
 }
 
-#[derive(Clone, Debug, serde::Deserialize)]
+#[derive(Clone, Debug, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "graphql", derive(async_graphql::InputObject))]
+#[serde(rename_all = "camelCase")]
 pub struct CreateMessage {
+    pub creator_id: Uuid,
+    #[validate(length(min = 1))]
     pub content: String,
 }
 
@@ -34,7 +37,6 @@ impl CreateMessage {
     pub async fn persist<'e, E: sqlx::PgExecutor<'e>>(
         &self,
         executor: E,
-        creator_id: Uuid,
     ) -> Result<Message, sqlx::Error> {
         sqlx::query_as(
             r#"
@@ -44,7 +46,7 @@ RETURNING id, content, created_by, created_at
 "#,
         )
         .bind(self.content.as_str())
-        .bind(&creator_id)
+        .bind(&self.creator_id)
         .fetch_one(executor)
         .await
     }
