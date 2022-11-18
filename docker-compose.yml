@@ -12,6 +12,8 @@ services:
       target: graphql-api
     depends_on:
       - database
+    environment:
+      - DATABASE_URL=postgres://postgres@database/postgres
     ports:
       - 3001:3000
 
@@ -28,8 +30,12 @@ services:
       target: rest-api
     depends_on:
       - database
+    environment:
+      - DATABASE_URL=postgres://postgres@database/postgres
     ports:
       - 3002:3000
 
   database:
     build: ./database
+    ports:
+      - 5432:5432

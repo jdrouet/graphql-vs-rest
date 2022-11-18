@@ -25,6 +25,17 @@ impl<'r> sqlx::FromRow<'r, sqlx::postgres::PgRow> for Account {
         })
     }
 }
+impl Account {
+    pub async fn find_by_id<'e, E: sqlx::PgExecutor<'e>>(
+        executor: E,
+        account_id: &Uuid,
+    ) -> Result<Account, sqlx::Error> {
+        sqlx::query_as("SELECT id, name, email, created_at FROM accounts WHERE id = $1")
+            .bind(account_id)
+            .fetch_one(executor)
+            .await
+    }
+}
 
 #[derive(Clone, Debug, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "graphql", derive(async_graphql::InputObject))]

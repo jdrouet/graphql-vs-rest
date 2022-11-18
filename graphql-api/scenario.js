@@ -15,8 +15,11 @@ const createMessage = () => randomString(30);
 
 export default function () {
   group('status', function () {
-    const status = http.post(URL, JSON.stringify({ query: '{ running }' }));
-    check(status, { 'status was 200': (r) => r.status == 200 });
+    const res = http.post(URL, JSON.stringify({ query: '{ running }' }));
+    check(res, {
+      'status was 200': (r) => r.status === 200,
+      'payload': (r) => r.json().data.running === true,
+    });
   });
   //
   const accountId = group('create account', function () {
@@ -30,14 +33,17 @@ export default function () {
     }
   }`;
     const req = http.post(URL, JSON.stringify({ query }));
-    check(req, { 'create account was 200': (r) => r.status == 200 });
+    check(req, {
+      'status was 200': (r) => r.status === 200,
+      'payload': (r) => !!r.json().data.createAccount.id,
+    });
     return req.json().data.createAccount.id;
   });
   //
   group('create message', function () {
     const query = `
   mutation CreateMessage {
-    createMessage(input:{createdBy:"${accountId}",content:"${createMessage()}"}) {
+    createMessage(input:{creatorId:"${accountId}",content:"${createMessage()}"}) {
       id
       content
       createdBy
@@ -45,6 +51,37 @@ export default function () {
     }
   }`;
     const req = http.post(URL, JSON.stringify({ query: query }));
-    check(req, { 'create message was 200': (r) => r.status == 200 });
+    check(req, {
+      'status was 200': (r) => r.status === 200,
+      'payload': (r) => {
+        const payload = r.json();
+        return !!payload.data && !!payload.data.createMessage && !!payload.data.createMessage.id;
+      },
+    });
+  });
+  //
+  group('list messages with user', function () {
+    const query = `
+  query ListMessages {
+    messages(input:{count:50,page:0}) {
+      id
+      content
+      creator {
+        id
+        name
+        email
+        createdAt
+      }
+      createdAt
+    }
+  }`;
+    const req = http.post(URL, JSON.stringify({ query: query }));
+    check(req, {
+      'status was 200': (r) => r.status === 200,
+      'payload': (r) => {
+        const payload = r.json();
+        return !!payload.data && !!payload.data.messages && Array.isArray(payload.data.messages);
+      },
+    });
   });
 }

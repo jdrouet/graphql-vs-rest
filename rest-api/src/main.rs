@@ -15,6 +15,7 @@ async fn main() {
     let app = Router::new()
         .route("/status", get(handler::status::handler))
         .route("/accounts", post(handler::create_account::handler))
+        .route("/messages", get(handler::list_message::handler))
         .route("/messages", post(handler::create_message::handler))
         .layer(Extension(database_pool));
 

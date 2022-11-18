@@ -15,6 +15,7 @@ impl IntoResponse for ServerError {
 
 impl From<sqlx::Error> for ServerError {
     fn from(origin: sqlx::Error) -> Self {
+        eprintln!("sqlx error: {:?}", origin);
         Self {
             status: StatusCode::BAD_REQUEST,
             payload: serde_json::json!({ "reason": origin.to_string() }),
@@ -24,6 +25,7 @@ impl From<sqlx::Error> for ServerError {
 
 impl From<validator::ValidationErrors> for ServerError {
     fn from(origin: validator::ValidationErrors) -> Self {
+        eprintln!("validation error: {:?}", origin);
         Self {
             status: StatusCode::BAD_REQUEST,
             payload: serde_json::to_value(origin).unwrap(),

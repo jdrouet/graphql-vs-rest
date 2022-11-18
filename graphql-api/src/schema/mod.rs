@@ -7,10 +7,14 @@ use async_graphql::{EmptySubscription, MergedObject, Schema, SchemaBuilder};
 pub type GraphQLSchema = Schema<Query, Mutation, EmptySubscription>;
 
 #[derive(MergedObject, Default)]
-pub struct Query(health::HealthQuery, account::AccountQuery);
+pub struct Query(
+    health::HealthQuery,
+    account::AccountQuery,
+    message::MessageQuery,
+);
 
 #[derive(MergedObject, Default)]
-pub struct Mutation(account::AccountMutation);
+pub struct Mutation(account::AccountMutation, message::MessageMutation);
 
 /// Build the GraphQL schema.
 pub fn build_schema() -> SchemaBuilder<Query, Mutation, EmptySubscription> {
