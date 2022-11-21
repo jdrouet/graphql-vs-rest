@@ -16,24 +16,29 @@ const createMessage = () => randomString(30);
 
 export default function () {
   group('status', function () {
-    const req = http.get(`${HOST}/status`);
-    check(req, { 'status was 200': (r) => r.status == 200 });
+    const res = http.get(`${HOST}/status`);
+    check(res, { 'status was 200': (r) => r.status == 200 });
   });
   //
   const accountId = group('create account', function () {
-    const req = http.post(`${HOST}/accounts`, JSON.stringify({
+    const res = http.post(`${HOST}/accounts`, JSON.stringify({
       name: createName(),
       email: createEmail(),
     }), { headers });
-    check(req, { 'create account was 200': (r) => r.status == 200 });
-    return req.json().id;
+    check(res, { 'create account was 200': (r) => r.status == 200 });
+    return res.json().id;
   });
   //
   group('create message', function () {
-    const createdMessage = http.post(`${HOST}/messages`, JSON.stringify({
+    const res = http.post(`${HOST}/messages`, JSON.stringify({
       content: createMessage(),
       creatorId: accountId,
     }), { headers });
-    check(createdMessage, { 'create message was 200': (r) => r.status == 200 });
+    check(res, { 'create message was 200': (r) => r.status == 200 });
+  });
+  //
+  group('list messages with user', function () {
+    const res = http.get(`${HOST}/messages`);
+    check(res, { 'status was 200': (r) => r.status === 200 });
   });
 }

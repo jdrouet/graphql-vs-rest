@@ -1,9 +1,11 @@
 services:
   runner-graphql-api:
     image: grafana/k6
-    command: run /scenario.js
+    command: run --summary-export /results/export.json /scenario.js
+    user: ${USER_ID}
     volumes:
       - ./graphql-api/scenario.js:/scenario.js:ro
+      - ./results:/results
     depends_on:
       - server-graphql-api
 
@@ -19,9 +21,11 @@ services:
 
   runner-rest-api:
     image: grafana/k6
-    command: run /scenario.js
+    command: run --summary-export /results/export.json /scenario.js
+    user: ${USER_ID}
     volumes:
       - ./rest-api/scenario.js:/scenario.js:ro
+      - ./results:/results
     depends_on:
       - server-rest-api
 
